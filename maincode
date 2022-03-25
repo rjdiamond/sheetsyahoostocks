@@ -1,0 +1,22 @@
+This allows the ability to get stock updates from Yahoo Finance in Google Sheets.
+
+Using this formula: "getYPrice3(VOO)"
+
+ref: https://stackoverflow.com/questions/44030983/yahoo-finance-url-not-working
+
+  function getYPrice3(symbol) {
+  symbol = symbol || "VWRA.L";
+  symbol = encodeURI(symbol);
+  Utilities.sleep(Math.floor(Math.random() * 5000))
+  var url = 'https://query2.finance.yahoo.com/v10/finance/quoteSummary/'+symbol+'?modules=price'; // last one day history
+  Logger.log(url);  
+  var response = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
+  var responseCode = response.getResponseCode();
+  if (responseCode === 200) {
+    var quote = JSON.parse(response.getContentText());
+    Logger.log(parseFloat(quote.quoteSummary.result[0].price.regularMarketPrice.raw));
+    return parseFloat(quote.quoteSummary.result[0].price.regularMarketPrice.raw);
+  }else{
+     return -1; 
+  }
+}
